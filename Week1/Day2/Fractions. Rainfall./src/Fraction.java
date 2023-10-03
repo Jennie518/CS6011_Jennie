@@ -8,18 +8,19 @@ public class Fraction {
     public Fraction() {
         this.numerator = 0;
         this.denominator = 1;
+
     }
 
     public Fraction(long n, long d) {
         if (d == 0) {
-            throw new IllegalArgumentException("Denominator cannot be 0");
+            throw new IllegalArgumentException("Denominator cannot be zero.");
         }
         long gcd = GCD(n, d);
-        this.numerator = n / gcd;
-        this.denominator = d / gcd;
-        if (this.denominator < 0) {
-            this.numerator = -this.numerator;
-            this.denominator = -this.denominator;
+        numerator = n / gcd;
+        denominator = d / gcd;
+        if (denominator < 0) {
+            numerator = -numerator;
+            denominator = -denominator;
         }
     }
 
@@ -34,7 +35,7 @@ public class Fraction {
         return gcd;
     }
 
-    // 加法
+    // add
     public Fraction plus(Fraction rhs) {
         long newNumerator = this.numerator * rhs.denominator + rhs.numerator * this.denominator;
         long newDenominator = this.denominator * rhs.denominator;
@@ -85,9 +86,35 @@ public class Fraction {
     }
 
 
-    private void reduce() {
-        long gcd = GCD(numerator,denominator);
-        this.numerator /= gcd;
-        this.denominator /= gcd;
+//    private void reduce() {
+//        long gcd = GCD(numerator,denominator);
+//        this.numerator /= gcd;
+//        this.denominator /= gcd;
+//    }
+//    public static void main(String[] args) {
+//        Fraction fraction1 = new Fraction(3, 4);
+//        Fraction fraction2 = new Fraction(1, 2);
+//
+//        Fraction sum = fraction1.plus(fraction2);
+//        Fraction difference = fraction1.minus(fraction2);
+//        Fraction product = fraction1.times(fraction2);
+//        Fraction quotient = fraction1.dividedBy(fraction2);
+//        Fraction reciprocal = fraction1.reciprocal();
+//
+//        System.out.println("Fraction 1: " + fraction1);
+//        System.out.println("Fraction 2: " + fraction2);
+//        System.out.println("Sum: " + sum);
+//        System.out.println("Difference: " + difference);
+//        System.out.println("Product: " + product);
+//        System.out.println("Quotient: " + quotient);
+//        System.out.println("Reciprocal of Fraction 1: " + reciprocal);
+//    }
+
+    public long getNumerator() {
+        return numerator;
+    }
+
+    public long getDenominator() {
+        return denominator;
     }
 }
