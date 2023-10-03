@@ -20,7 +20,7 @@ public class MyHttpServer {
             }
 
             if(fileName.equals("/")){// if client input "/" just return to the index.html
-                fileName = "/index.html";
+                fileName = "/day1.html";
             }
             String filePath =  "/Users/zhanyijun/Desktop/CS6011/Week1/Day1"+fileName;
             System.out.println(filePath);
@@ -42,7 +42,7 @@ public class MyHttpServer {
             }
 
             else{// if not exists,go to the webpage 404 error.
-                FileInputStream fileToRead = new FileInputStream("/Users/zhanyijun/Desktop/CS6011/Week1/Day1");
+                FileInputStream fileToRead = new FileInputStream("/Users/zhanyijun/Desktop/CS6011/Week1/Day1/error.html");
                 OutputStream outputStream = client.getOutputStream();
                 outputStream.write("HTTP/1.1 404\n".getBytes());
                 outputStream.write("Content-Type: text/html\n".getBytes());
