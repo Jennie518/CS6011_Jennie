@@ -1,7 +1,7 @@
 package com.example.synthesizer;
 
 public class Mixer implements AudioComponent {
-        private final AudioComponent[] inputs; // 用于存储多个输入音频组件的数组
+        private final AudioComponent[] inputs; // 用于存储多个输入音频组件的数组 // AudioClip[] inputs
 
         public Mixer(int numInputs) {
             inputs = new AudioComponent[numInputs]; // 初始化数组以容纳指定数量的输入
@@ -9,26 +9,24 @@ public class Mixer implements AudioComponent {
 
         @Override
         public AudioClip getClip() {
-            // 假设输入数组中的所有音频剪辑具有相同的长度
+            // assume inputs[] have same length
             int length = inputs[0].getClip().getData().length;
             byte[] mixedData = new byte[length];
-
-            // 遍历输入音频组件，将它们的音频数据相加
+            // iterates through all input audio components.
             for (AudioComponent input : inputs) {
                 byte[] inputData = input.getClip().getData();
-
                 for (int j = 0; j < length; j++) {
                     // 将每个输入音频的对应位置的采样值相加
                     mixedData[j] += inputData[j];
                 }
             }
 
-            // 创建一个新的 AudioClip 来包装混合后的音频数据
+            // 创建一个新的 AudioClip 并将混合后的数据分配给它
             AudioClip mixedClip = new AudioClip();
-            System.arraycopy(mixedData, 0, mixedClip.getData(), 0, length);
-
+            mixedClip.setData(mixedData); // 设置混合后的音频数据
             return mixedClip;
         }
+
 
     @Override
     public boolean hasInput() {
