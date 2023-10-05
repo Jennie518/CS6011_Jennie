@@ -48,6 +48,8 @@ public class AudioClip {
         return Arrays.copyOf(data, data.length);
     }
     public void setData(byte[] newData) {
+//        int lowerByte = data[2 * i] & 0xFF;
+//        int upperByte = data[2 * i + 1] & 0xFF;
         // 检查新数据的长度是否与现有数据长度相同
         if (newData.length != data.length) {
             throw new IllegalArgumentException("New data length must match current data length");
