@@ -11,12 +11,12 @@
             System.out.println("reciprocal:" + fraction1.reciprocal()+ " " + fraction2.reciprocal());
             System.out.println("change to string :" + fraction1.toString()+" " + fraction2.toString());
             System.out.println("Double value:"+ fraction1.toDouble()+ " " + fraction2.toDouble() );
-            try {
-                Rainfall rainData = new Rainfall("rainfall_data.txt");
-                rainData.generateReport();
-            } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-            }
+//            try {
+//                Rainfall rainData = new Rainfall("rainfall_data.txt");
+//                rainData.generateReport();
+//            } catch (Exception e) {
+//                System.out.println("Error: " + e.getMessage());
+//            }
         }
 }
 

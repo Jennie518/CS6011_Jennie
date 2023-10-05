@@ -12,15 +12,21 @@ public class Fraction {
     }
 
     public Fraction(long n, long d) {
-        if (d == 0) {
-            throw new IllegalArgumentException("Denominator cannot be zero.");
-        }
-        long gcd = GCD(n, d);
-        numerator = n / gcd;
-        denominator = d / gcd;
-        if (denominator < 0) {
-            numerator = -numerator;
-            denominator = -denominator;
+        try {
+            if (d == 0) {
+                throw new IllegalArgumentException("Denominator cannot be zero.");
+            }
+            long gcd = GCD(n, d);
+            numerator = n / gcd;
+            denominator = d / gcd;
+            if (denominator < 0) {
+                numerator = -numerator;
+                denominator = -denominator;
+            }
+        } catch (IllegalArgumentException e) {
+            // 处理IllegalArgumentException异常
+            System.out.println("IllegalArgumentException: " + e.getMessage());
+            // 可以选择抛出其他异常或采取其他适当的处理方法
         }
     }
 
@@ -58,12 +64,19 @@ public class Fraction {
 
     // divided
     public Fraction dividedBy(Fraction rhs) {
-        if (rhs.numerator == 0) {
-            throw new ArithmeticException("Cannot divided by 0");
+        try {
+            if (rhs.numerator == 0) {
+                throw new ArithmeticException("Cannot divide by 0");
+            }
+            long newNumerator = this.numerator * rhs.denominator;
+            long newDenominator = this.denominator * rhs.numerator;
+            return new Fraction(newNumerator, newDenominator);
+        } catch (ArithmeticException e) {
+            // 处理ArithmeticException异常
+            System.out.println("ArithmeticException: " + e.getMessage());
+            // 可以选择抛出其他异常或采取其他适当的处理方法
+            return null; // 返回一个适当的值或null
         }
-        long newNumerator = this.numerator * rhs.denominator;
-        long newDenominator = this.denominator * rhs.numerator;
-        return new Fraction(newNumerator, newDenominator);
     }
 
     // 倒数
