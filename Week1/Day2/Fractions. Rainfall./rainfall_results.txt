@@ -9,3 +9,4 @@ The average rainfall amount for January is 3.78 inches.
 The average rainfall amount for April is 2.74 inches.
 The average rainfall amount for August is 2.38 inches.
 The average rainfall amount for November is 4.01 inches.
+The overall average rainfall amount is 3.95 inches.

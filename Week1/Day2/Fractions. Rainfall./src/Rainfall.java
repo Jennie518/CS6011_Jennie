@@ -17,6 +17,9 @@ public class Rainfall {
             Map<String, Double> monthlyData = new HashMap<>();
             Map<String, Integer> daysInMonth = new HashMap<>();
 
+            double totalOverallRainfall = 0;  // 用于计算总降雨量
+            int totalDays = 0;               // 用于计算总天数
+
             while ((line = br.readLine()) != null)  {
                 System.out.println("Reading line: " + line); // Debug statement
 
@@ -26,6 +29,10 @@ public class Rainfall {
                 if (parts.length == 3) {
                     String month = parts[0]; // 月份信息
                     double value = Double.parseDouble(parts[2]); // 将字符串转换为 double
+
+                    // 更新总降雨量和总天数
+                    totalOverallRainfall += value;
+                    totalDays++;
 
                     // 如果月份已经在映射中，则累加降雨量和天数
                     if (monthlyData.containsKey(month)) {
@@ -50,7 +57,11 @@ public class Rainfall {
                 bw.write(String.format("The average rainfall amount for %s is %.2f inches.", month, averageRainfall));
                 bw.newLine(); // 换行
             }
-            bw.close();
+
+            // 计算并写入整体平均降雨量
+            double overallAverageRainfall = totalOverallRainfall / totalDays;
+            bw.write(String.format("The overall average rainfall amount is %.2f inches.", overallAverageRainfall));
+            bw.newLine();
 
             System.out.println("Data processed and written to " + outputFilename);
         } catch (IOException e) {
