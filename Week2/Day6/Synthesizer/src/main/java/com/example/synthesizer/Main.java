@@ -10,14 +10,14 @@ public class Main {
 
             // 创建第一个正弦波和 Volume Adjuster
             AudioComponent sineWave1 = new SineWave(440);
-            AudioComponent quieterSineWave1 = new VolumeAdjuster(sineWave1, 0.4);
+            AudioComponent quieterSineWave1 = new VolumeAdjuster(sineWave1, 0.5);
 
             // 创建第二个正弦波和 Volume Adjuster
             AudioComponent sineWave2 = new SineWave(220);
-            AudioComponent quieterSineWave2 = new VolumeAdjuster(sineWave2, 0.2);
+            AudioComponent quieterSineWave2 = new VolumeAdjuster(sineWave2, 0.4);
 
             // 创建 Mixer，并将两个调整过音量的正弦波连接到 Mixer
-            Mixer mixer = new Mixer(2);
+            Mixer mixer = new Mixer();
             mixer.connectInput(quieterSineWave1, 0);
             mixer.connectInput(quieterSineWave2, 1);
 

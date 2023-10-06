@@ -9,6 +9,10 @@ public class SineWave implements AudioComponent {
 //        this.clip = generateSineWaveClip(frequency);
     }
 
+    public SineWave() {
+
+    }
+
     @Override
     public AudioClip getClip() {
         AudioClip clip = new AudioClip();
@@ -31,23 +35,3 @@ public class SineWave implements AudioComponent {
         assert false; // SineWave 不接受输入，断言失败
     }
 }
-
-    // 生成正弦波音频剪辑
-//    private AudioClip generateSineWaveClip(double frequency) {
-//        int length = (int) (AudioClip.DURATION * AudioClip.SAMPLE_RATE);
-//        byte[] data = new byte[length * 2]; // 16-bit audio, 2 bytes per sample
-//        double maxValue = Short.MAX_VALUE;
-//
-//        for (int i = 0; i < length; i++) {
-//            double sampleValue = maxValue * Math.sin(2 * Math.PI * frequency * i / AudioClip.SAMPLE_RATE);
-//            short sample = (short) sampleValue;
-//            data[2 * i] = (byte) (sample & 0xFF);          // 低 8 位
-//            data[2 * i + 1] = (byte) ((sample >> 8) & 0xFF);  // 高 8 位
-//        }
-//
-//        AudioClip sineWaveClip = new AudioClip();
-//        System.arraycopy(data, 0, sineWaveClip.getData(), 0, data.length);
-//
-//        return sineWaveClip;
-//    }
-//}

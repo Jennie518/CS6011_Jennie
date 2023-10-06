@@ -49,19 +49,19 @@ class AudioClipTest {
         assertNotNull(data);
         assertEquals(2 * AudioClip.DURATION * AudioClip.SAMPLE_RATE, data.length);
     }
-    @org.junit.Test
+    @Test
     public void testSetAndGetRandomSamples() {
         AudioClip audioClip = new AudioClip(); // 创建一个 AudioClip 对象
         Random random = new Random(); // 创建一个随机数生成器
 
         // 设置随机样本值
-        for (int i = 0; i < audioClip.getData().length; i++) {
+        for (int i = 0; i < audioClip.getData().length/2; i++) {
             short randomValue = (short) random.nextInt(Short.MAX_VALUE + 1);
             audioClip.setSample(i, randomValue);
         }
 
         // 检查随机样本值是否正确
-        for (int i = 0; i < audioClip.getData().length; i++) {
+        for (int i = 0; i < audioClip.getData().length/2; i++) {
             short expectedValue = (short) audioClip.getSample(i);
             assertEquals(expectedValue, audioClip.getSample(i));
         }

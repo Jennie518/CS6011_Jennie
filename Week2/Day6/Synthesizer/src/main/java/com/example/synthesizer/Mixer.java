@@ -1,47 +1,60 @@
 package com.example.synthesizer;
 
+import java.util.ArrayList;
+
 public class Mixer implements AudioComponent {
-        private final AudioComponent[] inputs; // 用于存储多个输入音频组件的数组 // AudioClip[] inputs
+    private final ArrayList<AudioComponent> inputs = new ArrayList<>();
 
-        public Mixer(int numInputs) {
-            inputs = new AudioComponent[numInputs]; // 初始化数组以容纳指定数量的输入
+    public void addInput(AudioComponent input) {
+        inputs.add(input);
+    }
+
+    public void removeInput(AudioComponent input) {
+        inputs.remove(input);
+    }
+
+    @Override
+    public AudioClip getClip() {
+        // 创建一个新的 AudioClip
+        AudioClip mixedClip = new AudioClip();
+
+        // 预先获取所有输入的 AudioClip
+        ArrayList<AudioClip> inputClips = new ArrayList<>();
+        for (AudioComponent input : inputs) {
+            inputClips.add(input.getClip());
         }
 
-        @Override
-        public AudioClip getClip() {
-            // assume inputs[] have same length
-            int length = inputs[0].getClip().getData().length;
-            byte[] mixedData = new byte[length];
-            // iterates through all input audio components.
-            for (AudioComponent input : inputs) {
-                byte[] inputData = input.getClip().getData();
-                for (int j = 0; j < length; j++) {
-                    // 将每个输入音频的对应位置的采样值相加
-                    mixedData[j] += inputData[j];
-                }
+        for (int j = 0; j < AudioClip.TOTAL_SAMPLES; j++) {
+            int currentSample = mixedClip.getSample(j);
+            for (AudioClip clip : inputClips) {
+                int inputSample = clip.getSample(j);
+                mixedClip.setSample(j, currentSample + inputSample);
+                currentSample = mixedClip.getSample(j);  // 更新当前样本值
             }
-
-            // 创建一个新的 AudioClip 并将混合后的数据分配给它
-            AudioClip mixedClip = new AudioClip();
-            mixedClip.setData(mixedData); // 设置混合后的音频数据
-            return mixedClip;
         }
+
+        return mixedClip;
+    }
 
 
     @Override
     public boolean hasInput() {
-        return false;
+        return true;
     }
 
     @Override
     public void connectInput(AudioComponent input, int index) {
-            if (index >= 0 && index < inputs.length) {
-                inputs[index] = input; // 将输入音频组件存储在指定的索引位置
-            } else {
-                throw new IllegalArgumentException("Invalid input index");
-            }
+        if (index < 0) {
+            throw new IllegalArgumentException("Invalid input index");
         }
 
-        // 其他必要的方法和逻辑
+        // 确保ArrayList的大小足够大
+        while (inputs.size() <= index) {
+            inputs.add(null);
+        }
+
+        // 将输入设置在指定的索引位置
+        inputs.set(index, input);
     }
+}
 

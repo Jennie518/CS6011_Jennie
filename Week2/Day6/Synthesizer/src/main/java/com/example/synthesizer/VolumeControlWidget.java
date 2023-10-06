@@ -1,19 +1,29 @@
 package com.example.synthesizer;
 
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.VBox;
-import org.w3c.dom.Node;
 
 public class VolumeControlWidget extends AudioComponentWidgetBase {
     private Slider volumeSlider;
+    private VBox mainUI;  // Change the type to VBox
 
     public VolumeControlWidget() {
-        super();
         Label title = new Label("Volume Control");
         volumeSlider = new Slider(0, 1, 0.5); // 0 to 1 for volume percentage
-        VBox layout = new VBox(title, volumeSlider);
-        mainUI = (Node) layout;
+        mainUI = new VBox(title, volumeSlider);
+    }
+
+    @Override
+    protected Node createMainUI() {
+        Label title = new Label("Volume Control");
+        volumeSlider = new Slider(0, 1, 0.5); // 0 to 1 for volume percentage
+        return new VBox(title, volumeSlider); // 返回包含标签和滑块的 VBox
+    }
+
+    public VBox getMainUI() {
+        return mainUI;
     }
 
     @Override
