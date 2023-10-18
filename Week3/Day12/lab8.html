@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplication Table</title>
+    <style>
+        .highlighted {
+        background-color: yellow;
+    }
+        .clicked {
+        font-weight: bold;
+    }
+    </style>
+</head>
+<body>
+    <script>
+        let table = document.createElement('table')
+        for (let i = 0;i < 10;i++){
+            let row = document.createElement('tr')
+            for(let j = 0; j < 10; j++){
+                if (i===0){
+                    let header = document.createElement('th')
+                    header.textContent = j
+                    row.appendChild(header)
+                }else{
+                    let cell = document.createElement('td')
+                    if(j===0){
+                        cell.textContent = i
+                        row.appendChild(cell)
+                    }else{
+                        cell.textContent = i*j
+                        row.appendChild(cell)
+                    }
+                }
+            }
+            table.appendChild(row)
+        }
+        document.body.appendChild(table)
+        // 鼠标移入高亮
+        table.addEventListener('mouseover', function(e) {
+            if (e.target.tagName === 'TD') {
+                e.target.classList.add('highlighted');
+            }
+        });
+        
+        // 鼠标移出取消高亮
+        table.addEventListener('mouseout', function(e) {
+            if (e.target.tagName === 'TD') {
+                e.target.classList.remove('highlighted');
+            }
+        });
+         // 点击高亮
+        let clickedElem;
+        table.addEventListener('click', function(e) {
+            if (clickedElem) {
+                clickedElem.classList.remove('clicked');
+            }
+            if (e.target.tagName === 'TD') {
+                clickedElem = e.target;
+                clickedElem.classList.add('clicked');
+            }
+        });
+        // 背景颜色动画
+        let isAnimating = true;
+        let colorValue = 0;
+        let direction = 1;
+        setInterval(() => {
+            if (isAnimating) {
+                document.body.style.backgroundColor = `rgb(${colorValue}, 0, ${255 - colorValue})`;
+                colorValue += direction;
+                if (colorValue > 255 || colorValue < 0) direction *= -1;
+            }
+        }, 10);
+
+        // 动画切换功能
+        let toggleText = document.createElement('div');
+        toggleText.textContent = 'click here to change color';
+        toggleText.addEventListener('click', () => {
+            isAnimating = !isAnimating;  
+        });
+        document.body.appendChild(toggleText);
+
+    </script>
+    
+</body>
+</html>
