@@ -1,48 +1,70 @@
 package com.example.synthesizer;
-
+import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class SineWaveWidget extends AudioComponentWidgetBase {
-    private Slider frequencySlider;
-    protected Node createMainUI() {
-        VBox vbox = new VBox(10);  // 10是元素之间的间距
-        vbox.setPrefSize(120, 90);
-        vbox.setStyle("-fx-background-color: lightgray;");
-        Label title = new Label("Sine Wave Generator");
-        frequencySlider = new Slider(20, 2000, 440); // 示例滑块
-        Label frequencyLabel = new Label("Frequency: " + (int) frequencySlider.getValue() + " Hz");
 
-        // 更新标签以显示滑块的当前值
-        frequencySlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            frequencyLabel.setText("Frequency: " + newValue.intValue() + " Hz");
-        });
+    Slider slider = new Slider(220, 880, 440);
+    Label title = new Label();
+    public static  Circle OutputCircle_;
 
-        Circle inputCircle = new Circle(10, Color.YELLOWGREEN);  // 10 is radius
-        Circle outputCircle = new Circle(10, Color.LIGHTPINK); // 10 is radius
+    public SineWaveWidget (AudioComponent ac, AnchorPane parent, String name) {
+        super(ac, parent, name);
+    }
 
-        HBox circleBox = new HBox(50);  // 50 is spacing
-        circleBox.getChildren().addAll(inputCircle, outputCircle);
-        circleBox.setAlignment(Pos.CENTER);
+    public void CreateSineWaveWidget( ){
 
+        title.setMouseTransparent(true);
+        title.setText("SineWave 440Hz");
+        slider.setOnMouseDragged(e-> handleSlider(e));
+        slider.setPadding(new Insets(6));
+        centerComponent_.getChildren().add(title);
+        centerComponent_.getChildren().add(slider);
+        baseLayout_.setPrefSize(200,60);
 
-        vbox.getChildren().addAll(title, frequencySlider, frequencyLabel, circleBox);
+        VBox volumebar = new VBox();
+        volumebar.setAlignment(Pos.CENTER);
 
-        return vbox;  // 返回包含标签、滑块和两个圆圈的VBox
+        OutputCircle_ = new Circle(10);
+        OutputCircle_.setFill(Color.GREEN);
+
+        OutputCircle_.setOnMousePressed(e -> startConnection(e, OutputCircle_));
+        OutputCircle_.setOnMouseDragged(e -> moveConnection(e, OutputCircle_));
+        OutputCircle_.setOnMouseReleased(e -> endConnection(e, OutputCircle_));
+
+        rightRightSide_.getChildren().add(OutputCircle_);
+
+    }
+
+    public void handleSlider(MouseEvent e) {
+        int frequency = (int) slider.getValue();
+        title.setText("SineWave " + frequency + "Hz");
+        SineWave sw = (SineWave) audioComponent_;
+        sw.setFrequency(frequency);
+//        audioComponent_ = new SineWave(frequency);
     }
 
     @Override
-    public double getValue() {
-        return frequencySlider.getValue();
-    }
+    public void handleDrag(MouseEvent e) {
+        double mouseDelX = e.getSceneX() - mouseStartDragX_;
+        double mouseDelY = e.getSceneY() - mouseStartDragY_;
+        this.relocate(widgetStartDragX_ + mouseDelX, widgetStartDragY_ + mouseDelY);
 
-    @Override
-    public void setValue(double value) {
-        frequencySlider.setValue(value);
+        Bounds parentBounds = parent_.getBoundsInParent();
+        Bounds bounds = SineWaveWidget.OutputCircle_.localToScene(SineWaveWidget.OutputCircle_.getBoundsInLocal());
+
+        if( line_ != null ) {
+            line_.setStartX(bounds.getCenterX() - parentBounds.getMinX());
+            line_.setStartY(bounds.getCenterY() - parentBounds.getMinY());
+            System.out.println("dragging the widget and the line");
+        }
     }
 }

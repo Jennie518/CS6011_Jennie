@@ -15,14 +15,14 @@ import javafx.scene.shape.Circle;
 
 public class VolumeWidget extends AudioComponentWidgetBase {
 
-    private final Slider slider = new Slider(0,2,1);
+    private final Slider slider = new Slider(0,1,0.5);
     private final Label title = new Label();
     private  Circle VolumeConnector_;
-    public static Circle VolumeOutput_;
+    public  Circle VolumeOutput_; // TODO remove static
     public static double VOLUME_RADIUS_ = 20;
-    protected static Volume AdjustVolume_;
+    protected static VolumeAdjuster AdjustVolume_;
 
-    public VolumeWidget(Volume ac, AnchorPane parent, String name) {
+    public VolumeWidget(VolumeAdjuster ac, AnchorPane parent, String name) {
         super(ac, parent, name);
         AdjustVolume_ = ac;
     }
@@ -79,8 +79,15 @@ public class VolumeWidget extends AudioComponentWidgetBase {
             line_.setStartY(bounds.getCenterY() - parentBounds.getMinY());
             System.out.println("connected");
         }
+    }
 
+    @Override
+    public void startDrag(MouseEvent e) {
 
+    }
+
+    @Override
+    public void closeWidget() {
 
     }
 

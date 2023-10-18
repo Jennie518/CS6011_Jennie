@@ -1,23 +1,19 @@
 package com.example.synthesizer;
 
+import javafx.scene.layout.AnchorPane;
+
+import java.util.ArrayList;
+
+
 public class Cable {
-    private AudioComponent source;
-    private AudioComponent destination;
+    ArrayList<AudioComponent> audioComponent_;
+    protected AnchorPane parent = AudioComponentWidgetBase.parent_;
+//    protected Line line = AudioComponentWidgetBase.line_;
+//    protected AudioComponentWidgetBase audioComponentWidgetBase = new AudioComponentWidgetBase();
 
-    public Cable(AudioComponent source, AudioComponent destination) {
-        this.source = source;
-        this.destination = destination;
-        connect();
-
-    }
-    public void connect() {
-        if (destination instanceof Mixer) {
-            ((Mixer) destination).addInput(source);
-        }
-
-    }
-    public void drawConnection() {
-        // 这里绘制从源到目的地的直线。您可能需要JavaFX的路径或线条来实现。
+    Cable(AudioComponent speaker, AudioComponent volumeControl) {}
+    // fx to connect all inputs audio components
+    public void connectInput(AudioComponent input) {
+        audioComponent_.add(input);
     }
 }
-

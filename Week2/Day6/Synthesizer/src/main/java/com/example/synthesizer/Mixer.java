@@ -21,7 +21,9 @@ public class Mixer implements AudioComponent {
         // 预先获取所有输入的 AudioClip
         ArrayList<AudioClip> inputClips = new ArrayList<>();
         for (AudioComponent input : inputs) {
-            inputClips.add(input.getClip());
+            if (input != null) {  // 添加这个检查以避免NullPointerException
+                inputClips.add(input.getClip());
+            }
         }
 
         for (int j = 0; j < AudioClip.TOTAL_SAMPLES; j++) {
@@ -32,9 +34,9 @@ public class Mixer implements AudioComponent {
                 currentSample = mixedClip.getSample(j);  // 更新当前样本值
             }
         }
-
         return mixedClip;
     }
+
 
 
     @Override
@@ -43,18 +45,8 @@ public class Mixer implements AudioComponent {
     }
 
     @Override
-    public void connectInput(AudioComponent input, int index) {
-        if (index < 0) {
-            throw new IllegalArgumentException("Invalid input index");
-        }
-
-        // 确保ArrayList的大小足够大
-        while (inputs.size() <= index) {
-            inputs.add(null);
-        }
-
-        // 将输入设置在指定的索引位置
-        inputs.set(index, input);
+    public void connectInput(AudioComponent input) {
+        inputs.add(input);
     }
 }
 

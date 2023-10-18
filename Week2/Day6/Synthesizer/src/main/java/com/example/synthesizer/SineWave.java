@@ -15,6 +15,7 @@ public class SineWave implements AudioComponent {
 
     @Override
     public AudioClip getClip() {
+        System.out.println("sineware freq: " + frequency);
         AudioClip clip = new AudioClip();
         for (int i = 0; i < AudioClip.TOTAL_SAMPLES; i++) {
             double time = i / (double) AudioClip.SAMPLE_RATE;
@@ -31,7 +32,11 @@ public class SineWave implements AudioComponent {
     }
 
     @Override
-    public void connectInput(AudioComponent input, int index) {
+    public void connectInput(AudioComponent input) {
         assert false; // SineWave 不接受输入，断言失败
+    }
+
+    public void setFrequency(int freq) {
+        frequency = freq;
     }
 }

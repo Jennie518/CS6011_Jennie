@@ -1,12 +1,17 @@
 package com.example.synthesizer;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
 import javax.sound.sampled.*;
 import java.util.ArrayList;
 
@@ -14,8 +19,12 @@ public class SynthesizeApplication extends Application {
     //member variables
     public static AnchorPane mainCanvas_;
     public static ArrayList<AudioComponentWidgetBase> widgets_ = new ArrayList<>();
+    public static ArrayList<VolumeWidget> volumewidgets_ = new ArrayList<>();
+    public static SpeakerWidget speaker_;
 
     ArrayList<AudioComponentWidgetBase> SpeakerWidgets = SpeakerWidget.SpeakerWidgets_;
+
+
 
     @Override
     public void start(Stage stage) {
@@ -68,10 +77,15 @@ public class SynthesizeApplication extends Application {
         volumeButton.setTextFill(Color.BLACK);
         volumeButton.setOnAction(e -> createVolumeComponent());
 
+//        Button mixerButton = new Button("MixerWidget");
+//        mixerButton.setTextFill(Color.BLACK);
+//        mixerButton.setOnAction(e -> createMixerComponent());
+
 
         // add children of right panel
         rightPanel.getChildren().add(sineWaveButton);
         rightPanel.getChildren().add(volumeButton);
+//        rightPanel.getChildren().add(mixerButton);
 
 
         /*********************** center panel***********************/
@@ -80,9 +94,7 @@ public class SynthesizeApplication extends Application {
 
 
         // create a speaker widget on the mainCanvas
-        SpeakerWidget speakerWidget = new SpeakerWidget();
-        speakerWidget.CreateSpeakerWidget();
-
+        speaker_ = new SpeakerWidget();
 
         /*********************** bottom panel***********************/
         HBox buttomPanel = new HBox();
@@ -107,16 +119,16 @@ public class SynthesizeApplication extends Application {
 
 
     private void createVolumeComponent() {
-        AudioComponent SineWave = new SineWave(440);
-        VolumeAdjuster vol = new VolumeAdjuster(SineWave,1);
+        // 检查是否已经有SineWave组件存在
+        VolumeAdjuster vol = new VolumeAdjuster(1);
         VolumeWidget vW = new VolumeWidget(vol, mainCanvas_, "Volume");
         vW.CreateVolumeWidget();
         vW.setLayoutX(30);
         vW.setLayoutY(350);
         widgets_.add(vW);
+        volumewidgets_.add(vW);
         System.out.println("Volume widget created");
     }
-
     private void createSineWaveComponent() {
         AudioComponent SineWave = new SineWave(440);
         SineWaveWidget sineWidget = new SineWaveWidget(SineWave, mainCanvas_, "SineWave");
@@ -128,6 +140,34 @@ public class SynthesizeApplication extends Application {
         sineWidget.setLayoutY(layoutY_);
         System.out.println("SineWave widget created");
     }
+//    private void createMixerComponent() {
+//        try {
+//            Clip c = AudioSystem.getClip();
+//            Mixer mixer = new Mixer();
+//            MixerWidget mixerWidget = new MixerWidget(mixer,mainCanvas_,"Mixer");
+//            mixerWidget.createMixerWidget();
+//            for (AudioComponentWidgetBase speakerWidget : SpeakerWidget.SpeakerWidgets_) {
+//                mixer.connectInput(speakerWidget.getAudioComponent());
+//            }
+//            mixerWidget.setLayoutX(60);
+//            mixerWidget.setLayoutY(80);
+//            widgets_.add(mixerWidget);
+//            System.out.println("widgets_ is " + widgets_.size());
+//            System.out.println("Speakerwidgets_ is " + SpeakerWidgets.size());
+//
+//            AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
+//            byte[] data = mixer.getClip().getData();
+//            c.open(format, data, 0, data.length);
+//            c.start();
+//            c.addLineListener(e -> handleAudioDone(e, c)); // its job is to wait until the event is stopped and then close the clip
+//
+//        } catch (LineUnavailableException e) {
+//            System.out.println("failed to open the clip");
+//        }
+//    }
+
+
+
 
     private void PlayNetwork() {
         if (SpeakerWidgets.isEmpty()) {
@@ -136,21 +176,15 @@ public class SynthesizeApplication extends Application {
         }
         try {
             Clip c = AudioSystem.getClip();
-            Mixer mixer = new Mixer();
-
-            for (AudioComponentWidgetBase speakerWidget : SpeakerWidget.SpeakerWidgets_) {
-                mixer.connectInput(speakerWidget.getAudioComponent());
-            }
 
             System.out.println("widgets_ is " + widgets_.size());
             System.out.println("Speakerwidgets_ is " + SpeakerWidgets.size());
 
             AudioFormat format = new AudioFormat(44100, 16, 1, true, false);
-            byte[] data = mixer.getClip().getData();
+            byte[] data = speaker_.mixer_.getClip().getData();
             c.open(format, data, 0, data.length);
             c.start();
-            c.addLineListener(e -> handleAudioDone(e, c));
-            // its job is to wait until the event is stopped and then close the clip
+            c.addLineListener(e -> handleAudioDone(e, c)); // its job is to wait until the event is stopped and then close the clip
 
         } catch (LineUnavailableException e) {
             System.out.println("failed to open the clip");
@@ -167,13 +201,11 @@ public class SynthesizeApplication extends Application {
 
             c.open(format, clip.getData(), 0, clip.getData().length);
             c.start();
-            c.addLineListener(e -> handleAudioDone(e, c));
-            // its job is to wait until the event is stopped and then close the clip
+            c.addLineListener(e -> handleAudioDone(e, c)); // its job is to wait until the event is stopped and then close the clip
 
         } catch (LineUnavailableException e) {
             System.out.println("failed to open the clip");
         }
-
     }
 
     private void handleAudioDone(LineEvent e, Clip c) {
@@ -184,110 +216,7 @@ public class SynthesizeApplication extends Application {
     }
 
     public static void main(String[] args) {
-                launch();
-//        Application.launch(SynthesizeApplication.class); // this will run my JavaFx GUI app, basically it will run the start()
+//                launch();
+        Application.launch(SynthesizeApplication.class); // this will run my JavaFx GUI app, basically it will run the start()
     }
-
-
 }
-//
-//import javafx.application.Application;
-//import javafx.geometry.Insets;
-//import javafx.scene.Scene;
-//import javafx.scene.control.Button;
-//
-//import javafx.scene.layout.*;
-//import javafx.stage.Stage;
-//
-//import javax.sound.sampled.*;
-//
-//public class SynthesizeApplication extends Application {
-//    private VolumeControlWidget volumeControl;
-//    private SineWaveWidget sineWaveControl;
-//    private AnchorPane mainCenter;
-//
-//    @Override
-//    public void start(Stage stage) {
-//        BorderPane root = setupUI();
-//
-//        Scene scene = new Scene(root, 800, 600);
-//        stage.setTitle("Synthesizer");
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-//
-//    private BorderPane setupUI() {
-//        VBox rightPanel = setupRightPanel();
-//        mainCenter = new AnchorPane();
-//        mainCenter.setStyle("-fx-background-color: #f1e6be");
-//        BorderPane root = new BorderPane();
-//        root.setCenter(mainCenter);
-//        root.setRight(rightPanel);
-//        return root;
-//    }
-//
-//    private Button showButton() {
-//        Button showBotton = new Button("Show frequency");
-//        showBotton.setOnAction(event -> {
-//            if (!mainCenter.getChildren().contains(sineWaveControl.getMainUI())) {
-//                AnchorPane.setTopAnchor(sineWaveControl.getMainUI(), 50.0);
-//                AnchorPane.setLeftAnchor(sineWaveControl.getMainUI(), 50.0);
-//                mainCenter.getChildren().add(sineWaveControl.getMainUI());
-//            }
-//        });
-//        return showBotton;
-//    }
-//    private Button playButton() {
-//        Button playButton = new Button("Play");
-//        playButton.setOnAction(event -> {
-//            double frequency = sineWaveControl.getValue();
-//            playSound(frequency);
-//        });
-//        return playButton;
-//    }
-//
-//    private VBox setupRightPanel() {
-//        volumeControl = new VolumeControlWidget();
-//        sineWaveControl = new SineWaveWidget();
-//
-//        Button showBotton = showButton();
-//package com.example.synthesizer;
-//        Button playBotton = playButton();
-//        VBox rightPanel = new VBox(volumeControl.getMainUI(),showBotton,playBotton);
-//        rightPanel.setSpacing(15);
-//        rightPanel.setStyle("-fx-background-color: lightblue");
-//        rightPanel.setPadding(new Insets(20));
-//        rightPanel.setPrefWidth(150);
-//        return rightPanel;
-//    }
-//
-//    private void playSound(double frequency) {
-//        // 获取音量值
-//        double volumeValue = volumeControl.getValue();
-//        try {
-//            Clip c = AudioSystem.getClip();
-//            AudioFormat format16 = new AudioFormat(44100, 16, 1, true, false);
-//
-//            AudioComponent sineWave = new SineWave(frequency);
-//            AudioComponent quieterSineWave = new VolumeAdjuster(sineWave, volumeValue);
-//            AudioClip mixedAudio = quieterSineWave.getClip();
-//            c.open(format16, mixedAudio.getData(), 0, mixedAudio.getData().length);
-//
-//            c.addLineListener(new AudioListener(c));
-//
-//            System.out.println("About to play...");
-//            c.start();
-//            c.loop(2);
-//
-//            // 由于您已经使用了LineListener，因此不再需要while循环来检查音频是否完成播放
-//
-//        } catch (LineUnavailableException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-//    public static void main(String[] args) {
-//        launch();
-//    }
-//}

@@ -4,16 +4,19 @@ public class VolumeAdjuster implements AudioComponent {
     private AudioComponent input;
     private double volumeScale; // 音量缩放因子
 
-    public VolumeAdjuster(AudioComponent input, double volumeScale) {
-        this.input = input;
-        this.volumeScale = volumeScale;
+    VolumeAdjuster(double vol ) {
+        volumeScale = vol;
     }
+
 
     @Override
     public AudioClip getClip() {
-        AudioClip original = input.getClip();
+        System.out.println("scale: " + volumeScale);
+        if (input == null) {
+            throw new IllegalStateException("VolumeAdjuster's input is not connected.");
+        }
         AudioClip adjustedClip = new AudioClip();
-
+        AudioClip original = input.getClip();
         for (int i = 0; i < AudioClip.TOTAL_SAMPLES; i++) {
             int sample = original.getSample(i);
             sample = (int) (sample * volumeScale);
@@ -33,8 +36,19 @@ public class VolumeAdjuster implements AudioComponent {
     }
 
     @Override
-    public void connectInput(AudioComponent input, int index) {
+    public void connectInput(AudioComponent input) {
         this.input = input;
+    }
+
+    public void setVolumeScale(double volumeScale) {
+        this.volumeScale = volumeScale;
+    }
+    public void removeInput(AudioComponent input) {
+        this.input = null;
+    }
+
+    public double getVolumeScale() {
+        return volumeScale;
     }
 }
 

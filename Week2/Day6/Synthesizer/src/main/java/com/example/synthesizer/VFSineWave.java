@@ -33,7 +33,7 @@ public class VFSineWave implements AudioComponent {
     }
 
     @Override
-    public void connectInput(AudioComponent input, int index) {
+    public void connectInput(AudioComponent input) {
         throw new UnsupportedOperationException("VFSineWave does not accept direct input.");
     }
 }
