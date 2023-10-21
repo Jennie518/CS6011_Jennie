@@ -1,13 +1,9 @@
 "use strict"
 
-const xVaule = document.getElementById("xValue");
-const yVaule = document.getElementById("yValue");
+const xValue = document.getElementById("xValue");
+const yValue = document.getElementById("yValue");
 const resultInput = document.getElementById("result");
 const buttonClick = document.getElementById("myButton")
-const IsClick = false
-// xVaule.addEventListener("keypress", handleKeyPress);
-// yVaule.addEventListener("keypress", handleKeyPress);
-
  let ws = new WebSocket("ws://localhost:8080");
  let wsOpen = false;
 
@@ -28,11 +24,11 @@ function handleError(){
 }
 
 window.addEventListener("keypress",handleKeyPress)
-button.addEventListener('click', function(event) {
-    
+buttonClick.addEventListener('click', function(event) {
+    handleKeyPress({code: "Enter"});
 });
 function handleKeyPress(event){
-    if (event.code == "Enter"|| event.code == "Click") {
+    if (event.code == "Enter"|| IsClick) {
         let x = parseFloat(xValue.value);
         let y = parseFloat(yValue.value);
         if (isNaN(x)){
@@ -48,6 +44,7 @@ function handleKeyPress(event){
             yVaule.select();
             return;
         }
+        IsClick = false;
 
         console.log("x value", x);
         console.log("y value", y);
