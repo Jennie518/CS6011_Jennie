@@ -28,7 +28,7 @@ function getChaseNums() {
     return Math.max(Math.floor(Math.random() * 10), 1) + 5;
 }
 
-const chasers = Array(getChaseNums()).fill(1).map(generateRandomChaser);
+const chasers = Array(getChaseNums()).fill(null).map(generateRandomChaser);
 
 function animateImg() {
 

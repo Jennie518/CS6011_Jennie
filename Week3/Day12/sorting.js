@@ -1,4 +1,5 @@
-// sorting.js
+
+// find the location of the smallest value in the array starting from the 'start' position
 function findMinLocation(arr, start) {
     let minIndex = start;
     for(let i = start + 1; i < arr.length; i++) {
@@ -9,15 +10,20 @@ function findMinLocation(arr, start) {
     return minIndex;
 }
 
+// Basic implementation of the selection sort algorithm
 function selectionSort(arr) {
     for(let i = 0; i < arr.length - 1; i++) {
         let minIndex = findMinLocation(arr, i);
-        [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];
+        [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]];// Swap elements
     }
 }
 
+function compareNumbers(a, b) {
+    return a < b;
+}
 
-let testArray1 = [3, 1, 4, 1, 5, 9];
+
+let testArray1 = [3, 1, 4, 1, 5, 9];//todo 加一个comprator 
 selectionSort(testArray1);
 console.log(testArray1); // 输出: [1, 1, 3, 4, 5, 9]
 
@@ -42,6 +48,7 @@ function selectionSort(arr, comparator) {
     }
 }
 
+// Test arrays
 let people = [
     {first: "John", last: "Doe"},
     {first: "Jane", last: "Smith"},
