@@ -43,21 +43,26 @@ ws.onmessage = handleMsgCB= (event) =>{
 };
 
 
-// function handleEnter(e){ //e is the event type of object
-//     e.target
-//     e.keyCode //value of enter is 13
-//     e.preventDefault()
-// }
+
 
 roomnameInput.addEventListener("keypress", (e) =>{
     let user = usernameInput.value.toLowerCase();
     let roomname = roomnameInput.value;
+    let vaild = true;
     if(e.keyCode === 13){
-        if (user >= 'a' && user <= 'z'){
+        for (let char of roomname){
+            if (!(char >= 'a' && char <= 'z')){ //only lowcase
+                vaild = false;
+            }
+            if (roomname.includes(' ')) {//no spaces
+                vaild = false;
+            }
+        }
+        if(vaild){
             ws.send("join" + " " + user + " " + roomname)
         }
         else{
-            alert("Plese enter charater")
+            alert("only lowercase letters (and no spaces) ")
         }
     }
 
@@ -75,3 +80,4 @@ sendButton.addEventListener("click",(e) =>{
 leaveButton.addEventListener("click",(e) =>{
     ws.send("leave")
 })
+
