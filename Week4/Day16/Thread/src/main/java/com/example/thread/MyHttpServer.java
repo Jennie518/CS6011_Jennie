@@ -64,7 +64,6 @@ class RequestHandler implements Runnable {
                 outputStream.write("\n".getBytes());
                 fileToRead.transferTo(outputStream);
 
-
                 outputStream.flush();
                 outputStream.close();
             }

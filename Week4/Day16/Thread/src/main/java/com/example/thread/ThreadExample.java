@@ -34,7 +34,7 @@ public class ThreadExample {
                 e.printStackTrace();
             }
         }
-        int correctAnswer = (maxValue * (maxValue + 1)) / 2; // 因为包括了maxValue，所以使用+1，而不是-1。
+        int correctAnswer = (maxValue * (maxValue - 1)) / 2;
         System.out.println("Computed answer: " + answer);
         System.out.println("Correct answer: " + correctAnswer);
 
@@ -56,7 +56,7 @@ public class ThreadExample {
                     }
                 }
             });
-            System.out.println("hello number " + i + Thread.currentThread().getId());
+//            System.out.println("hello number " + i + Thread.currentThread().getId());
             threads[i].start();
         }
 
