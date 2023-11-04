@@ -12,35 +12,56 @@ ws.onopen = handleOpenCB = (event) =>{
     console.log('Connected to the WebSocket server');
 
 };
-ws.onmessage = handleMsgCB= (event) =>{
-    let data = JSON.parse(event.data)
-    let text = document.createElement("blockquote")
-    let people = document.createElement("blockquote")
+ws.onmessage = handleMsgCB = (event) => {
+    console.log(event.data);
+    let data = JSON.parse(event.data);
+    let text = document.createElement("blockquote");
+    let time = document.createElement("span");
+    time.classList.add("timestamp");
+
+    let currentTime = new Date();
+    let month = currentTime.getMonth();
+    let Day= currentTime.getDay();
+    let hours = currentTime.getHours();
+    let year = currentTime.getFullYear()
+    let minutes = currentTime.getMinutes();
+    if (minutes < 10) {
+        minutes = '0' + minutes;
+    }
+    let timestamp = Day + "/" + month + "/" +year + " " + hours + ":" + minutes; //add date and time feature
+
+    let people;
     switch(data.type){
         case 'join':
-            text.textContent = data.user + " has joined " + data.room
-            people.textContent = data.user
-            people.id = "user-" + data.user
-            peopleBox.appendChild(people)
-            
+            text.textContent = data.user + " has joined " + data.room;
+            time.textContent = timestamp;
             break;
         case 'message':
-            text.textContent = data.user + " :" + data.message
-            
+            text.textContent = data.user + " :" + data.message;
+            time.textContent = timestamp;
             break;
         case 'leave':
             text.textContent = data.user + " has left the room.";
+            time.textContent = timestamp;
             let userElement = document.getElementById('user-' + data.user);
-            peopleBox.removeChild(userElement)
+            if (userElement) {
+                peopleBox.removeChild(userElement);
+            }
             break;
+        case 'userList':
+            let currentUsers = data.users;
+            peopleBox.innerHTML = '';
+            currentUsers.forEach(user => {
+                people = document.createElement("blockquote");
+                people.textContent = user;
+                people.id = "user-" + user;
+                peopleBox.appendChild(people);
+            });
+            return;
     }
-    messagesBox.appendChild(text)
-    
-    
-    console.log('Received message:', event.data);
-    console.log('Received data type:', typeof event.data);
+    messagesBox.appendChild(text);
+    messagesBox.appendChild(time);
 };
-
 
 
 
@@ -58,7 +79,9 @@ roomnameInput.addEventListener("keypress", (e) =>{
             }
         }
         if(vaild){
-            ws.send("join" + " " + user + " " + roomname)
+            let message = {"type": "join", "user": user, "room": roomname}
+            ws.send(JSON.stringify(message));
+            // ws.send("join" + " " + user + " " + roomname)
         }
         else{
             alert("only lowercase letters (and no spaces) ")
@@ -68,15 +91,27 @@ roomnameInput.addEventListener("keypress", (e) =>{
 })
 messageInput.addEventListener("keypress", (e) =>{
     if(e.keyCode === 13){
-        ws.send("message" + " " + messageInput.value)
+        let user = usernameInput.value;
+        let roomname = roomnameInput.value;
+        let message = {"type": "message", "user": user, "room": roomname,"message":messageInput.value}
+        ws.send(JSON.stringify(message));
+        // ws.send("message" + " " + messageInput.value)
     }
     
 })
 sendButton.addEventListener("click",(e) =>{
-    ws.send("message" + " " + messageInput.value)
+    let user = usernameInput.value;
+    let roomname = roomnameInput.value;
+    let message = {"type": "message", "user": user, "room": roomname,"message":messageInput.value}
+    ws.send(JSON.stringify(message));
+    // ws.send("message" + " " + messageInput.value)
 })
 
 leaveButton.addEventListener("click",(e) =>{
-    ws.send("leave")
+    // ws.send("leave")
+    let user = usernameInput.value;
+    let roomname = roomnameInput.value;
+    let message = {"type": "leave", "user": user, "room": roomname}
+    ws.send(JSON.stringify(message));
 })
 
